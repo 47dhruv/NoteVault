@@ -21,8 +21,12 @@ function App() {
     setNotes((prev) => prev.filter((note) => note.id !== id));
   };
 
+  const updatenote=(id,notes)=>{
+    setNotes((prev)=>prev.map((note)=>note.id===id? {...note,...notes}:note))
+  }
+
   return (
-    <NoteProvider value={{ notes, createnote, deletenote }}>
+    <NoteProvider value={{ notes, createnote, deletenote ,updatenote}}>
       <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-gray-950">
         
         {/* Navbar */}

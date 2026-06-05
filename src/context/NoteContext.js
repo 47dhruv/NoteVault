@@ -9,7 +9,8 @@ export const NoteApp=createContext({
  },
  ],
    createnote:()=>{},
-   deletenote:()=>{}
+   deletenote:()=>{},
+   updatenote:()=>{},
 
 })
 
