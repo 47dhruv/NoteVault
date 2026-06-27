@@ -11,7 +11,7 @@ function App() {
   useEffect(() => {
     const fetchnotes = async () => {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/note/notes"
+        "https://notevault-qd3m.onrender.com/api/v1/note/notes"
       )
       console.log(response.data.data)
       setNotes(response.data.data)
@@ -20,60 +20,60 @@ function App() {
 
   }, [])
 
-  const createnote = async ({title,content }) => {
+  const createnote = async ({ title, content }) => {
     // POST to backend
     // then update state with response
-      try {
-    const response = await axios.post(
-      "http://localhost:8000/api/v1/note/notes",
-      {
-        title: title,
-        content: content,
-      
-      }
-    );
-    console.log(response.data.data);
-    setNotes((prev) => [response.data.data, ...prev]);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    console.log("Request completed");
-  }
-
-}
-
-  const deletenote = async(id) => {
     try {
-    const response = await axios.delete(
-      `http://localhost:8000/api/v1/note/notes/${id}`
-    );
-    console.log(response.data.data);
-     setNotes((prev) => prev.filter((note) => note._id !== id));
-  } catch (error) {
-    console.error(error);
-  } finally {
-    console.log("Request completed");
+      const response = await axios.post(
+        "https://notevault-qd3m.onrender.com/api/v1/note/notes",
+        {
+          title: title,
+          content: content,
+
+        }
+      );
+      console.log(response.data.data);
+      setNotes((prev) => [response.data.data, ...prev]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      console.log("Request completed");
+    }
+
   }
+
+  const deletenote = async (id) => {
+    try {
+      const response = await axios.delete(
+        `https://notevault-qd3m.onrender.com/api/v1/note/notes/${id}`
+      );
+      console.log(response.data.data);
+      setNotes((prev) => prev.filter((note) => note._id !== id));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      console.log("Request completed");
+    }
 
   };
 
-  const updatenote = async(id, notes) => {
+  const updatenote = async (id, notes) => {
     try {
-    const response = await axios.put(
-      `http://localhost:8000/api/v1/note/notes/${id}`,
-      {
-        title: notes.title,
-        content: notes.content,
-        
-      }
-    );
-    console.log(response.data.data);
-    setNotes((prev) => prev.map((note) => note._id === id ? { ...note, ...notes } : note))
-  } catch (error) {
-    console.error(error);
-  } finally {
-    console.log("Request completed");
-  }
+      const response = await axios.put(
+        `https://notevault-qd3m.onrender.com/api/v1/note/notes/${id}`,
+        {
+          title: notes.title,
+          content: notes.content,
+
+        }
+      );
+      console.log(response.data.data);
+      setNotes((prev) => prev.map((note) => note._id === id ? { ...note, ...notes } : note))
+    } catch (error) {
+      console.error(error);
+    } finally {
+      console.log("Request completed");
+    }
 
   }
 
