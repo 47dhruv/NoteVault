@@ -6,7 +6,7 @@ import noteRouter from "./routes/note.routes.js"
 const app= express()
 
 app.use(cors({
-    origin: "https://note-vault-murex-five.vercel.app/",
+    origin: "*",
     credentials: true
 }))
 app.use(json())
