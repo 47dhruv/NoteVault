@@ -14,7 +14,7 @@ const createNote = asyncHandler(async (req, res) => {
  
     const {title,content} = req.body
 
-    if ([title,content].some((feild)=>feild.trim()==="")) {
+    if ([title,content].some((feild)=>feild.trim()=="")) {
         throw  new apiErrors(401,"title,content not Found")
     }
     const createnote= await Note.create({

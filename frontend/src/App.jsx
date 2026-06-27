@@ -1,34 +1,86 @@
-import { useState } from "react";
 import "./App.css";
+import { useState, useEffect } from "react"
 import { NoteProvider } from "./context/NoteContext.js";
 import NoteCard from "./component/NoteCard.jsx";
 import NoteForm from "./component/NoteForm.jsx";
+import axios from "axios"
 
 function App() {
   const [notes, setNotes] = useState([]);
 
-  const createnote = (note) => {
-    setNotes((prev) => [
+  useEffect(() => {
+    const fetchnotes = async () => {
+      const response = await axios.get(
+        "http://localhost:8000/api/v1/note/notes"
+      )
+      console.log(response.data.data)
+      setNotes(response.data.data)
+    }
+    fetchnotes()
+
+  }, [])
+
+  const createnote = async ({title,content }) => {
+    // POST to backend
+    // then update state with response
+      try {
+    const response = await axios.post(
+      "http://localhost:8000/api/v1/note/notes",
       {
-        id: Date.now(),
-        ...note,
-      },
-      ...prev,
-    ]);
+        title: title,
+        content: content,
+      
+      }
+    );
+    console.log(response.data.data);
+    setNotes((prev) => [response.data.data, ...prev]);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    console.log("Request completed");
+  }
+
+}
+
+  const deletenote = async(id) => {
+    try {
+    const response = await axios.delete(
+      `http://localhost:8000/api/v1/note/notes/${id}`
+    );
+    console.log(response.data.data);
+     setNotes((prev) => prev.filter((note) => note._id !== id));
+  } catch (error) {
+    console.error(error);
+  } finally {
+    console.log("Request completed");
+  }
+
   };
 
-  const deletenote = (id) => {
-    setNotes((prev) => prev.filter((note) => note.id !== id));
-  };
+  const updatenote = async(id, notes) => {
+    try {
+    const response = await axios.put(
+      `http://localhost:8000/api/v1/note/notes/${id}`,
+      {
+        title: notes.title,
+        content: notes.content,
+        
+      }
+    );
+    console.log(response.data.data);
+    setNotes((prev) => prev.map((note) => note._id === id ? { ...note, ...notes } : note))
+  } catch (error) {
+    console.error(error);
+  } finally {
+    console.log("Request completed");
+  }
 
-  const updatenote=(id,notes)=>{
-    setNotes((prev)=>prev.map((note)=>note.id===id? {...note,...notes}:note))
   }
 
   return (
-    <NoteProvider value={{ notes, createnote, deletenote ,updatenote}}>
+    <NoteProvider value={{ notes, createnote, deletenote, updatenote }}>
       <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-gray-950">
-        
+
         {/* Navbar */}
         <nav className="border-b border-white/10 backdrop-blur-md sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -66,7 +118,7 @@ function App() {
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {notes.map((note) => (
                 <div
-                  key={note.id}
+                  key={note._id}
                   className="transform hover:scale-105 transition-all duration-300"
                 >
                   <NoteCard note={note} />

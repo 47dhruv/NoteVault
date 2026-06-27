@@ -12,10 +12,12 @@ const NoteForm = () => {
 
     if (!title.trim()) return;
 
-    createnote({
-      title,
-      noteMsg,
-    });
+    createnote(
+      {
+        title,
+        content: noteMsg
+      }
+    );
 
     setTitle("");
     setNoteMsg("");

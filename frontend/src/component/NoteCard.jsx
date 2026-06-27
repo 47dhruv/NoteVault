@@ -4,11 +4,11 @@ import { usenoteApp } from "../context/NoteContext.js";
 const NoteCard = ({ note }) => {
   const [isEditable, setIsEditable] = useState(false);
   const { deletenote, updatenote } = usenoteApp();
-  const [notemsg, setNotemsg] = useState(note.noteMsg);
+  const [notemsg, setNotemsg] = useState(note.content);
   const [title, setTitle] = useState(note.title);
 
   const noteupdate = () => {
-    updatenote(note.id, { ...note, noteMsg: notemsg,title:title });
+    updatenote(note._id, { ...note, content:notemsg,title:title });
     setIsEditable(false);
   };
 
@@ -113,7 +113,7 @@ const NoteCard = ({ note }) => {
           </button>
 
           <button
-            onClick={() => deletenote(note.id)}
+            onClick={() => deletenote(note._id)}
             className="
             px-4
             py-2
