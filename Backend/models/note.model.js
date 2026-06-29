@@ -1,13 +1,18 @@
-import mongoose ,{Schema} from "mongoose"
-const noteSchema= new Schema({
-    title:{
-        type:String,
-        required:true
+import mongoose, { Schema } from "mongoose"
+const noteSchema = new Schema({
+    title: {
+        type: String,
+        required: true
 
     },
-    content:{
-        type:String,
-        required:true
+    content: {
+        type: String,
+        required: true
+    },
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
     }
-},{timestamps:true})
-export const Note = mongoose.model("NOte",noteSchema)
+}, { timestamps: true })
+export const Note = mongoose.model("Note", noteSchema)

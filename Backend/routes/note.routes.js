@@ -1,4 +1,5 @@
 import {Router} from "express"
+import {auth} from "../middlwares/auth.middlwares.js"
 import {
     createNote,
     updateNote,
@@ -7,6 +8,7 @@ import {
     from "../controllers/note.controller.js"
 
     const router= Router()
+    router.use(auth)
     router.route("/notes")
     .get(getAllnotes)
     .post(createNote)
