@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken"
 
 export const auth= asyncHandler(async(req,_,next)=>{
    try {
-    const token= req.cookies?.accesToken||req.header("Authorization")?.replace("Bearer ","") 
+    const token = req.cookies?.accestoken || req.headers?.authorization?.split(" ")[1]
     console.log(token)
     if (!token) {
       
