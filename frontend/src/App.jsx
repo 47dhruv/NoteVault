@@ -2,6 +2,8 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import axios from "axios";
+import { Navigate } from "react-router-dom"
+
 
 import { NoteProvider } from "./context/NoteContext";
 
@@ -9,9 +11,16 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
+const getToken = () => localStorage.getItem("accesstoken")
+const ProtectedRoute = ({ children }) => {
+    if (!getToken()) {
+        return <Navigate to="/login" />
+    }
+    return children
+}
+
 function App() {
   const [notes, setNotes] = useState([]);
-  const getToken = () => localStorage.getItem("accesstoken")
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -106,8 +115,11 @@ function App() {
       }}
     >
       <Routes>
-        <Route path="/" element={<Home />} />
-
+       <Route path="/" element={
+    <ProtectedRoute>
+        <Home />
+    </ProtectedRoute>
+} />
         <Route path="/login" element={<Login />} />
 
         <Route path="/register" element={<Register />} />

@@ -6,9 +6,8 @@ import userRouter from "./routes/user.route.js"
 
 
 const app = express()
-
 app.use(cors({
-    origin: "*",
+    origin: ["http://localhost:5173", "https://note-vault-murex-five.vercel.app"],
     credentials: true
 }))
 app.use(cookieParser())
