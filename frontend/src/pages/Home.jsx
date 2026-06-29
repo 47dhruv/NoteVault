@@ -3,16 +3,21 @@ import EmptyState from "../component/EmptySate.jsx";
 import NoteCard from "../component/NoteCard.jsx";
 import NoteForm from "../component/NoteForm.jsx";
 import { usenoteApp } from "../context/NoteContext";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { notes } = usenoteApp();
+  const navigate =useNavigate()
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-gray-950">
 
       <Navbar
         totalNotes={notes.length}
-        onLogout={() => console.log("Logout")}
+        onLogout={ () => {
+    localStorage.removeItem("accesstoken")
+    navigate("/login")
+}}
       />
 
       <div className="max-w-7xl mx-auto px-6 py-10">
