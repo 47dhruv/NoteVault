@@ -3,11 +3,11 @@ import EmptyState from "../component/EmptySate.jsx";
 import NoteCard from "../component/NoteCard.jsx";
 import NoteForm from "../component/NoteForm.jsx";
 import { usenoteApp } from "../context/NoteContext";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { notes } = usenoteApp();
-  const navigate =useNavigate()
+  // const navigate =useNavigate()
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-gray-950">
@@ -16,7 +16,8 @@ const Home = () => {
         totalNotes={notes.length}
         onLogout={ () => {
     localStorage.removeItem("accesstoken")
-    navigate("/login")
+    window.location.href = "/login"
+    
 }}
       />
 
