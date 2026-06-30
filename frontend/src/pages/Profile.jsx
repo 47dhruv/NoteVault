@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+    const getToken = () => localStorage.getItem("accesstoken")
     const navigate = useNavigate();
 
     const [fullname, setFullname] = useState("");
@@ -18,94 +19,135 @@ const Profile = () => {
     // ===== ADDED =====
     // Fetch current logged in user
 
-    useEffect(() => {
-        const getCurrentUser = async () => {
-            try {
-                const response = await axios.get(
-                    "https://notevault-qd3m.onrender.com/api/v1/user/currentuser",
-                    {
-                        withCredentials: true,
-                    }
-                );
+  useEffect(() => {
+    const getCurrentUser = async () => {
+        const token = getToken();
 
-                const user = response.data.data;
-
-                setFullname(user.fullname);
-                setEmail(user.email);
-                setUsername(user.username);
-            } catch (error) {
-                console.log(error.response?.data?.message || error.message);
-            }
-        };
-
-        getCurrentUser();
-    }, []);
-
-    // ===== ADDED =====
-    // Update User
-
-    const updateUser = async () => {
-        if (
-            [fullname, email, username].some(
-                (field) => field.trim() === ""
-            )
-        ) {
-            alert("All fields are required.");
+        if (!token) {
+            navigate("/login");
             return;
         }
 
         try {
-            setLoading(true);
+            console.log(token);
 
-            const response = await axios.put(
-                "https://notevault-qd3m.onrender.com/api/v1/user/updateUser",
+            const response = await axios.get(
+                "https://notevault-qd3m.onrender.com/api/v1/user/currentuser",
                 {
-                    fullname,
-                    email,
-                    username,
-                },
-                {
-                    withCredentials: true,
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
             );
 
-            alert(response.data.message);
+            const user = response.data.data;
+
+            setFullname(user.fullname);
+            setEmail(user.email);
+            setUsername(user.username);
+
         } catch (error) {
             console.log(error.response?.data?.message || error.message);
-        } finally {
-            setLoading(false);
+
+            if (error.response?.status === 401) {
+                localStorage.removeItem("accesstoken");
+                navigate("/login");
+            }
         }
     };
+
+    getCurrentUser();
+}, [navigate]);
+
+    // ===== ADDED =====
+    // Update User
+
+   const updateUser = async () => {
+    if (
+        [fullname, email, username].some(
+            (field) => field.trim() === ""
+        )
+    ) {
+        alert("All fields are required.");
+        return;
+    }
+
+    const token = getToken();
+
+    try {
+        setLoading(true);
+
+        const response = await axios.put(
+            "https://notevault-qd3m.onrender.com/api/v1/user/updateUser",
+            {
+                fullname,
+                email,
+                username,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        alert(response.data.message);
+
+    } catch (error) {
+        console.log(error.response?.data?.message || error.message);
+
+        if (error.response?.status === 401) {
+            localStorage.removeItem("accesstoken");
+            navigate("/login");
+        }
+
+    } finally {
+        setLoading(false);
+    }
+};
 
     // ===== ADDED =====
     // Delete User
 
     const deleteUser = async () => {
-        const confirmDelete = window.confirm(
-            "Are you sure you want to permanently delete your account?"
+    const confirmDelete = window.confirm(
+        "Are you sure you want to permanently delete your account?"
+    );
+
+    if (!confirmDelete) return;
+
+    const token = getToken();
+
+    try {
+        setDeleteLoading(true);
+
+        const response = await axios.delete(
+            "https://notevault-qd3m.onrender.com/api/v1/user/delete",
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
         );
 
-        if (!confirmDelete) return;
+        alert(response.data.message);
 
-        try {
-            setDeleteLoading(true);
+        localStorage.removeItem("accesstoken");
 
-            const response = await axios.delete(
-                "https://notevault-qd3m.onrender.com/api/v1/user/delete",
-                {
-                    withCredentials: true,
-                }
-            );
+        navigate("/register");
 
-            alert(response.data.message);
+    } catch (error) {
+        console.log(error.response?.data?.message || error.message);
 
-            navigate("/register");
-        } catch (error) {
-            console.log(error.response?.data?.message || error.message);
-        } finally {
-            setDeleteLoading(false);
+        if (error.response?.status === 401) {
+            localStorage.removeItem("accesstoken");
+            navigate("/login");
         }
-    };
+
+    } finally {
+        setDeleteLoading(false);
+    }
+};
 
     return (
         <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-cyan-950 px-4 py-10">
