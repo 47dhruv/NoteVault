@@ -218,6 +218,28 @@ const upadtePassword = asyncHandler(async (req, res) => {
 
      
  })
+const getCurrentUser = asyncHandler(async (req, res) => {
+//  get userId from user
+// thenfind in db
+// then return 
+const userId=req.user?._id
+
+if (!isValidObjectId(userId)) {
+    throw new apiErrors(401,"user  not found")
+}
+const user= await User.findById(userId).select("-password -refreshtoken")
+if (!user) {
+   throw new apiErrors(401,"user  not found") 
+}
+
+return res
+        .status(201)
+        .json(new apiResponse(201, user, "current user get suscessfuly"))
+
+
+})
+
+ 
 
 export {
     registerUser,
@@ -225,7 +247,8 @@ export {
     upadtePassword,
     upadteUser,
     deleteUser,
-    logoutUser
+    logoutUser,
+    getCurrentUser
 
 
 }

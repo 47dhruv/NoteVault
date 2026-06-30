@@ -5,7 +5,8 @@ import {
     upadtePassword,
     upadteUser,
     deleteUser,
-    logoutUser
+    logoutUser,
+    getCurrentUser
 } from "../controllers/user.controller.js"
 import { auth } from "../middlwares/auth.middlwares.js";
 
@@ -24,5 +25,7 @@ router.route("/updatepassword")
     .put(auth,upadtePassword)
 router.route("/updateUser")
     .put(auth,upadteUser)
+router.route("/currentuser")
+    .get(auth,getCurrentUser)
 
 export default router

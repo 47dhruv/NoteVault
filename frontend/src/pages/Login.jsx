@@ -39,7 +39,7 @@ const Login = () => {
             setUsername("");
             setPassword("");
 
-            navigate("/");
+            window.location.href = "/";
         } catch (error) {
             console.error(error.response?.data?.message || error.message);
         } finally {
